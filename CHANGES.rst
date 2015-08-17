@@ -5,6 +5,9 @@ NEXT
 ----
 
 - depend on splinter 0.7.3, remove the previous status_code monkey patch (pelme)
+- add option --splinter-wait-time to specify splinter explicit wait timeout
+  (#42) (pelme)
+
 
 1.4.6
 -----
