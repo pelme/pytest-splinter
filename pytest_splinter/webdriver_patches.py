@@ -33,20 +33,6 @@ def __init__(self, *args, **kwargs):
 
 def patch_webdriver():
     """Patch selenium webdriver to add functionality/fix issues."""
-    def _request(self, *args, **kwargs):
-        """Override _request to set socket timeout to some appropriate value."""
-        exception = HTTPException('Unable to get response')
-        for _ in range(3):
-            try:
-                return old_request(self, *args, **kwargs)
-            except (socket.error, HTTPException, IOError, OSError) as exc:
-                exception = exc
-                self._conn = HTTPConnection(self._conn.host, self._conn.port, timeout=self._timeout)
-        raise exception
-
-    # Apply the monkey patche for RemoteConnection
-    remote_connection.RemoteConnection._request = _request
-
     # Apply the monkey patch to Firefox webdriver to disable native events
     # to avoid click on wrong elements, totally unpredictable
     # more info http://code.google.com/p/selenium/issues/detail?id=633
