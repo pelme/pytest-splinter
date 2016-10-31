@@ -398,32 +398,23 @@ def browser_instance_getter(
                 request.addfinalizer(browser.quit)
         elif not browser:
             browser = browser_pool[browser_key] = get_browser(splinter_webdriver)
-        try:
-            if splinter_webdriver not in browser.driver_name.lower():
-                raise IOError('webdriver does not match')
-            if hasattr(browser, 'driver'):
-                browser.driver.implicitly_wait(splinter_selenium_implicit_wait)
-                browser.driver.set_speed(splinter_selenium_speed)
-                browser.driver.command_executor.set_timeout(splinter_selenium_socket_timeout)
-                browser.driver.command_executor._conn.timeout = splinter_selenium_socket_timeout
-                if splinter_window_size:
-                    browser.driver.set_window_size(*splinter_window_size)
+        if splinter_webdriver not in browser.driver_name.lower():
+            raise IOError('webdriver does not match')
+        if hasattr(browser, 'driver'):
+            browser.driver.implicitly_wait(splinter_selenium_implicit_wait)
+            browser.driver.set_speed(splinter_selenium_speed)
+            browser.driver.command_executor.set_timeout(splinter_selenium_socket_timeout)
+            browser.driver.command_executor._conn.timeout = splinter_selenium_socket_timeout
+            if splinter_window_size:
+                browser.driver.set_window_size(*splinter_window_size)
+        browser.cookies.delete()
+        for url in splinter_clean_cookies_urls:
+            browser.visit(url)
             browser.cookies.delete()
-            for url in splinter_clean_cookies_urls:
-                browser.visit(url)
-                browser.cookies.delete()
-            if hasattr(browser, 'driver'):
-                browser.visit_condition = splinter_browser_load_condition
-                browser.visit_condition_timeout = splinter_browser_load_timeout
-                browser.visit('about:blank')
-        except (IOError, HTTPException, WebDriverException):
-            # we lost browser, try to restore the justice
-            try:
-                browser.quit()
-            except Exception:  # NOQA
-                pass
-            browser = browser_pool[browser_key] = get_browser(splinter_webdriver)
-            prepare_browser(request, parent)
+        if hasattr(browser, 'driver'):
+            browser.visit_condition = splinter_browser_load_condition
+            browser.visit_condition_timeout = splinter_browser_load_timeout
+            browser.visit('about:blank')
 
         return browser
 
