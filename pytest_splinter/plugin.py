@@ -407,10 +407,6 @@ def browser_instance_getter(
             browser.driver.command_executor._conn.timeout = splinter_selenium_socket_timeout
             if splinter_window_size:
                 browser.driver.set_window_size(*splinter_window_size)
-        browser.cookies.delete()
-        for url in splinter_clean_cookies_urls:
-            browser.visit(url)
-            browser.cookies.delete()
         if hasattr(browser, 'driver'):
             browser.visit_condition = splinter_browser_load_condition
             browser.visit_condition_timeout = splinter_browser_load_timeout
