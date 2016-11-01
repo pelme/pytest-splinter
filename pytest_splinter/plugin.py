@@ -402,7 +402,7 @@ def browser_instance_getter(
             raise IOError('webdriver does not match')
         if hasattr(browser, 'driver'):
             browser.driver.implicitly_wait(splinter_selenium_implicit_wait)
-            browser.driver.set_speed(splinter_selenium_speed)
+            # browser.driver.set_speed(splinter_selenium_speed)
             browser.driver.command_executor.set_timeout(splinter_selenium_socket_timeout)
             browser.driver.command_executor._conn.timeout = splinter_selenium_socket_timeout
             if splinter_window_size:
